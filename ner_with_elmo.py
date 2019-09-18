@@ -8,8 +8,6 @@ Original file is located at
 """
 import data.corpus_reader as corpus_reader
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_hub as hub
 from keras import backend as K
@@ -20,17 +18,20 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.metrics import classification_report
 from itertools import chain
 
+
 def sent2words(sents):
   words = []
   for p in sents:
     words.append(p[0])
   return words
 
+
 def sent2tags(sents):
   tags = []
   for p in sents:
     tags.append(p[1])
   return tags
+
 
 def process_data(data, max_len):
   sents = []
@@ -49,6 +50,7 @@ def process_data(data, max_len):
     sents.append(sent_i)
   return sents, tags
 
+
 def ElmoEmbedding(x):
     return elmo_model(inputs={
                             "tokens": tf.squeeze(tf.cast(x, 'string')),
@@ -56,6 +58,7 @@ def ElmoEmbedding(x):
                       },
                       signature="tokens",
                       as_dict=True)["elmo"]
+
 
 def bio_classification_report(y_true, y_pred):
   """
@@ -80,6 +83,7 @@ def bio_classification_report(y_true, y_pred):
     target_names = tagset,
   )
 
+
 def predict_tags(y_pred):
   out = []
   for i in range(len(y_pred)):
@@ -89,7 +93,8 @@ def predict_tags(y_pred):
     out.append(out_i)
   return out
 
-if __name__ = "__main__":  
+
+if __name__ == "__main__":  
   train = corpus_reader.read_file("data/train.txt")
   dev = corpus_reader.read_file("data/dev.txt")
   test = corpus_reader.read_file("data/test.txt")
